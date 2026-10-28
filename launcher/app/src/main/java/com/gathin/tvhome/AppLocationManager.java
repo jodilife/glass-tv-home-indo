@@ -22,13 +22,13 @@ public class AppLocationManager {
     public static final String KEY_LATITUDE = "latitude";
     public static final String KEY_LONGITUDE = "longitude";
 
-    // Defaults to Malaysia (Putrajaya DOE CA17W)
-    public static final String DEFAULT_REGION = "Malaysia";
-    public static final String DEFAULT_STATION_ID = "CA17W";
-    public static final String DEFAULT_LOCATION_NAME = "Putrajaya";
-    public static final String DEFAULT_STATION_PLACE = "SK Putrajaya Presint 18 (2)";
-    public static final double DEFAULT_LATITUDE = 2.9158;
-    public static final double DEFAULT_LONGITUDE = 101.6909;
+    // Defaults to Indonesia (Jakarta ID01)
+    public static final String DEFAULT_REGION = "Indonesia";
+    public static final String DEFAULT_STATION_ID = "ID01";
+    public static final String DEFAULT_LOCATION_NAME = "Jakarta";
+    public static final String DEFAULT_STATION_PLACE = "Monas / Gambir, Jakarta Pusat";
+    public static final double DEFAULT_LATITUDE = -6.2088;
+    public static final double DEFAULT_LONGITUDE = 106.8456;
 
     public static class Station {
         public final String id;
@@ -43,7 +43,7 @@ public class AppLocationManager {
             this.id = id;
             this.name = name;
             this.state = state != null ? state : "";
-            this.country = country != null ? country : "Malaysia";
+            this.country = country != null ? country : "Indonesia";
             this.place = place != null ? place : "";
             this.lat = lat;
             this.lon = lon;
@@ -61,7 +61,20 @@ public class AppLocationManager {
     private static final List<Station> ALL_STATIONS = new ArrayList<>();
 
     static {
-        // --- 🇲🇾 Malaysia (Default) ---
+        // --- 🇮🇩 Indonesia (Default - Dipindah ke urutan teratas) ---
+        List<Station> idStations = new ArrayList<>();
+        idStations.add(new Station("ID01", "Jakarta", "DKI Jakarta", "Indonesia", "Monas / Gambir, Jakarta Pusat", -6.2088, 106.8456));
+        idStations.add(new Station("ID02", "Surabaya", "Jawa Timur", "Indonesia", "Pusat Kota Surabaya", -7.2575, 112.7521));
+        idStations.add(new Station("ID03", "Bandung", "Jawa Barat", "Indonesia", "Gedung Sate / Alun-alun", -6.9175, 107.6191));
+        idStations.add(new Station("ID04", "Medan", "Sumatera Utara", "Indonesia", "Pusat Pasar, Medan", 3.5952, 98.6722));
+        idStations.add(new Station("ID05", "Denpasar", "Bali", "Indonesia", "Kuta / Denpasar", -8.6705, 115.2126));
+        idStations.add(new Station("ID06", "Batam", "Kepulauan Riau", "Indonesia", "Batam Centre", 1.1301, 104.0529));
+        idStations.add(new Station("ID07", "Yogyakarta", "D.I. Yogyakarta", "Indonesia", "Malioboro", -7.7956, 110.3695));
+        idStations.add(new Station("ID08", "Makassar", "Sulawesi Selatan", "Indonesia", "Pantai Losari", -5.1477, 119.4327));
+        REGION_STATIONS.put("Indonesia", idStations);
+        ALL_STATIONS.addAll(idStations);
+
+        // --- 🇲🇾 Malaysia ---
         List<Station> myStations = new ArrayList<>();
         myStations.add(new Station("CA17W", "Putrajaya", "W.P. Putrajaya", "Malaysia", "SK Putrajaya Presint 18 (2)", 2.9158, 101.6909));
         myStations.add(new Station("CA16W", "Cheras", "W.P. Kuala Lumpur", "Malaysia", "SMK Seri Permaisuri", 3.1063, 101.7179));
@@ -115,19 +128,6 @@ public class AppLocationManager {
         sgStations.add(new Station("SG04", "Woodlands", "North", "Singapore", "Woodlands Civic Centre", 1.4382, 103.7890));
         REGION_STATIONS.put("Singapore", sgStations);
         ALL_STATIONS.addAll(sgStations);
-
-        // --- 🇮🇩 Indonesia ---
-        List<Station> idStations = new ArrayList<>();
-        idStations.add(new Station("ID01", "Jakarta", "DKI Jakarta", "Indonesia", "Monas / Gambir, Jakarta Pusat", -6.2088, 106.8456));
-        idStations.add(new Station("ID02", "Surabaya", "Jawa Timur", "Indonesia", "Pusat Kota Surabaya", -7.2575, 112.7521));
-        idStations.add(new Station("ID03", "Bandung", "Jawa Barat", "Indonesia", "Gedung Sate / Alun-alun", -6.9175, 107.6191));
-        idStations.add(new Station("ID04", "Medan", "Sumatera Utara", "Indonesia", "Pusat Pasar, Medan", 3.5952, 98.6722));
-        idStations.add(new Station("ID05", "Denpasar (Bali)", "Bali", "Indonesia", "Kuta / Denpasar", -8.6705, 115.2126));
-        idStations.add(new Station("ID06", "Batam", "Kepulauan Riau", "Indonesia", "Batam Centre", 1.1301, 104.0529));
-        idStations.add(new Station("ID07", "Yogyakarta", "D.I. Yogyakarta", "Indonesia", "Malioboro", -7.7956, 110.3695));
-        idStations.add(new Station("ID08", "Makassar", "Sulawesi Selatan", "Indonesia", "Pantai Losari", -5.1477, 119.4327));
-        REGION_STATIONS.put("Indonesia", idStations);
-        ALL_STATIONS.addAll(idStations);
 
         // --- 🇧🇳 Brunei Darussalam ---
         List<Station> bnStations = new ArrayList<>();
@@ -198,7 +198,7 @@ public class AppLocationManager {
 
     public static List<Station> getStationsForRegion(String region) {
         if (region == null || !REGION_STATIONS.containsKey(region)) {
-            return REGION_STATIONS.get("Malaysia");
+            return REGION_STATIONS.get("Indonesia");
         }
         return Collections.unmodifiableList(REGION_STATIONS.get(region));
     }
@@ -273,7 +273,6 @@ public class AppLocationManager {
 
         Log.i(TAG, "Location set to: " + locationName + " (" + country + ") [" + lat + ", " + lon + "]");
 
-        // Trigger immediate sync for Weather & Prayer Times
         WeatherAirQuality.sync(context, null);
         PrayerTimes.sync(context, null);
     }
