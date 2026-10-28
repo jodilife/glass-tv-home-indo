@@ -416,11 +416,11 @@ public class WallpaperUploadServer {
 
     private String getHtmlPage() {
         return "<!DOCTYPE html>\n" +
-                "<html lang=\"ms\">\n" +
+                "<html lang=\"id\">\n" +
                 "<head>\n" +
                 "  <meta charset=\"UTF-8\">\n" +
                 "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no\">\n" +
-                "  <title>Glass TV • Upload Wallpaper</title>\n" +
+                "  <title>Glass TV • Unggah Wallpaper</title>\n" +
                 "  <style>\n" +
                 "    * { box-sizing: border-box; margin: 0; padding: 0; }\n" +
                 "    body {\n" +
@@ -716,189 +716,142 @@ public class WallpaperUploadServer {
                 "</head>\n" +
                 "<body>\n" +
                 "  <div class=\"card\">\n" +
-                "    <div class=\"badge\">Glass TV OS • by @imsomangge</div>\n" +
-                "    <h1>Muat Naik Wallpaper</h1>\n" +
-                "    <p class=\"subtitle\">Pilih mana-mana foto dari galeri telefon untuk dipaparkan secara langsung pada skrin TV anda.</p>\n" +
-                "\n" +
-                "    <div class=\"dropzone\" id=\"dropzone\" onclick=\"document.getElementById('file-input').click()\">\n" +
+                "    <div class=\"badge\">Glass TV OS • Versi Indonesia</div>\n" +
+                "    <h1>Unggah Wallpaper</h1>\n" +
+                "    <p class=\"subtitle\">Pilih foto apa saja dari galeri ponsel Anda untuk langsung ditampilkan di layar Smart TV.</p>\n" +
+                "    <div class=\"dropzone\" onclick=\"document.getElementById('fileInput').click()\">\n" +
                 "      <div class=\"dropzone-icon\">🖼️</div>\n" +
-                "      <div class=\"dropzone-text\">Pilih Foto dari Galeri</div>\n" +
-                "      <div class=\"dropzone-hint\">Menyokong JPG, PNG, WEBP (Resolusi 1080p / 4K)</div>\n" +
+                "      <div class=\"dropzone-text\">Ketuk untuk Pilih Foto</div>\n" +
+                "      <div class=\"dropzone-hint\">Mendukung format JPG, PNG</div>\n" +
                 "    </div>\n" +
-                "\n" +
+                "    <input type=\"file\" id=\"fileInput\" accept=\"image/*\" onchange=\"handleFileSelect(event)\">\n" +
                 "    <div id=\"preview-container\">\n" +
-                "      <img id=\"preview\" alt=\"Preview\">\n" +
-                "      <button class=\"change-btn\" onclick=\"document.getElementById('file-input').click()\">Tukar Foto</button>\n" +
+                "      <img id=\"preview\" alt=\"Pratinjau\">\n" +
+                "      <button class=\"change-btn\" onclick=\"document.getElementById('fileInput').click()\">Ganti</button>\n" +
                 "    </div>\n" +
-                "\n" +
-                "    <input type=\"file\" id=\"file-input\" accept=\"image/*\">\n" +
-                "\n" +
-                "    <button class=\"btn-submit\" id=\"btn-submit\" disabled onclick=\"uploadImage()\">\n" +
-                "      <span>Hantar ke Skrin TV</span>\n" +
+                "    <button id=\"uploadBtn\" class=\"btn-submit\" onclick=\"uploadFile()\" disabled>\n" +
+                "      <span>Kirim ke TV</span>\n" +
                 "    </button>\n" +
-                "\n" +
-                "    <div class=\"progress-wrap\" id=\"prog-wrap\">\n" +
-                "      <div class=\"progress-bar\" id=\"prog-bar\"></div>\n" +
+                "    <div class=\"progress-wrap\">\n" +
+                "      <div id=\"progressBar\" class=\"progress-bar\"></div>\n" +
                 "    </div>\n" +
-                "\n" +
-                "    <div class=\"status-msg\" id=\"status-msg\"></div>\n" +
-                "    <div class=\"watermark\">✨ Powered by <strong>@imsomangge</strong></div>\n" +
+                "    <div id=\"statusMsg\" class=\"status-msg\"></div>\n" +
                 "  </div>\n" +
-                "\n" +
                 "  <div class=\"gallery-card\">\n" +
                 "    <div class=\"gallery-header\">\n" +
-                "      <div class=\"gallery-title\">📱 Gambar di TV (<span id=\"photo-count\">0</span>)</div>\n" +
-                "      <button class=\"btn-slideshow\" onclick=\"setSlideshow()\">🔄 Putar Semua</button>\n" +
+                "      <div class=\"gallery-title\">Kelola Wallpaper</div>\n" +
+                "      <button class=\"btn-slideshow\" onclick=\"toggleSlideshow()\">Slideshow</button>\n" +
                 "    </div>\n" +
-                "    <div class=\"gallery-desc\">Pilih <strong>Kunci</strong> untuk kekalkan 1 gambar sahaja sebagai wallpaper, atau padam foto lama:</div>\n" +
-                "    <div class=\"gallery-list\" id=\"gallery-list\">\n" +
-                "      <div style=\"color:#64748b; font-size:12.5px; padding:12px 0;\">Memuat senarai foto...</div>\n" +
+                "    <div class=\"gallery-desc\">Pilih foto aktif untuk ditampilkan atau hapus foto yang tidak diinginkan.</div>\n" +
+                "    <div id=\"galleryList\" class=\"gallery-list\">\n" +
+                "      <div style=\"color: #64748b; font-size: 13px; padding: 10px;\">Memuat galeri...</div>\n" +
                 "    </div>\n" +
                 "  </div>\n" +
-                "\n" +
-                "  <footer>\n" +
-                "    <div>Bersambung terus ke TV melalui Wi-Fi Tempatan</div>\n" +
-                "    <div style=\"margin-top: 6px; font-weight: 600; color: #64748b;\">Powered by @imsomangge</div>\n" +
-                "  </footer>\n" +
-                "\n" +
+                "  <footer>Glass TV Home Screen • Indonesia Edition</footer>\n" +
                 "  <script>\n" +
-                "    const fileInput = document.getElementById('file-input');\n" +
-                "    const dropzone = document.getElementById('dropzone');\n" +
-                "    const previewContainer = document.getElementById('preview-container');\n" +
-                "    const preview = document.getElementById('preview');\n" +
-                "    const btnSubmit = document.getElementById('btn-submit');\n" +
-                "    const progWrap = document.getElementById('prog-wrap');\n" +
-                "    const progBar = document.getElementById('prog-bar');\n" +
-                "    const statusMsg = document.getElementById('status-msg');\n" +
-                "\n" +
                 "    let selectedFile = null;\n" +
-                "\n" +
-                "    fileInput.addEventListener('change', (e) => {\n" +
+                "    function handleFileSelect(e) {\n" +
                 "      const file = e.target.files[0];\n" +
                 "      if (!file) return;\n" +
                 "      selectedFile = file;\n" +
-                "\n" +
                 "      const reader = new FileReader();\n" +
-                "      reader.onload = (evt) => {\n" +
-                "        preview.src = evt.target.result;\n" +
-                "        dropzone.style.display = 'none';\n" +
-                "        previewContainer.style.display = 'block';\n" +
-                "        btnSubmit.disabled = false;\n" +
-                "        btnSubmit.innerHTML = '<span>✨ Tetapkan Sebagai Wallpaper TV</span>';\n" +
-                "        statusMsg.style.display = 'none';\n" +
+                "      reader.onload = function(evt) {\n" +
+                "        document.getElementById('preview').src = evt.target.result;\n" +
+                "        document.getElementById('preview-container').style.display = 'block';\n" +
+                "        document.getElementById('uploadBtn').disabled = false;\n" +
                 "      };\n" +
                 "      reader.readAsDataURL(file);\n" +
-                "    });\n" +
-                "\n" +
-                "    function uploadImage() {\n" +
+                "    }\n" +
+                "    function uploadFile() {\n" +
                 "      if (!selectedFile) return;\n" +
-                "\n" +
-                "      btnSubmit.disabled = true;\n" +
-                "      btnSubmit.innerText = 'Menghantar ke TV...';\n" +
-                "      progWrap.style.display = 'block';\n" +
-                "      progBar.style.width = '15%';\n" +
+                "      const btn = document.getElementById('uploadBtn');\n" +
+                "      const progressWrap = document.querySelector('.progress-wrap');\n" +
+                "      const progressBar = document.getElementById('progressBar');\n" +
+                "      const statusMsg = document.getElementById('statusMsg');\n" +
+                "      btn.disabled = true;\n" +
+                "      progressWrap.style.display = 'block';\n" +
+                "      progressBar.style.width = '10%';\n" +
                 "      statusMsg.style.display = 'none';\n" +
-                "\n" +
                 "      const xhr = new XMLHttpRequest();\n" +
-                "      xhr.open('POST', '/upload?name=' + encodeURIComponent(selectedFile.name), true);\n" +
-                "      xhr.setRequestHeader('Content-Type', selectedFile.type || 'image/jpeg');\n" +
-                "\n" +
-                "      xhr.upload.onprogress = (e) => {\n" +
+                "      xhr.open('POST', '/upload', true);\n" +
+                "      xhr.upload.onprogress = function(e) {\n" +
                 "        if (e.lengthComputable) {\n" +
-                "          const percent = Math.round((e.loaded / e.total) * 100);\n" +
-                "          progBar.style.width = percent + '%';\n" +
+                "          const percent = (e.loaded / e.total) * 90;\n" +
+                "          progressBar.style.width = percent + '%';\n" +
                 "        }\n" +
                 "      };\n" +
-                "\n" +
-                "      xhr.onload = () => {\n" +
-                "        if (xhr.status >= 200 && xhr.status < 300) {\n" +
-                "          progBar.style.width = '100%';\n" +
-                "          btnSubmit.innerText = '✅ Berjaya Dihantar!';\n" +
+                "      xhr.onload = function() {\n" +
+                "        progressBar.style.width = '100%';\n" +
+                "        statusMsg.style.display = 'block';\n" +
+                "        if (xhr.status === 200) {\n" +
                 "          statusMsg.className = 'status-msg success';\n" +
-                "          statusMsg.innerHTML = '🎉 Hebat! Gambar telah dipaparkan pada skrin TV anda.';\n" +
-                "          statusMsg.style.display = 'block';\n" +
-                "          loadGallery();\n" +
+                "          statusMsg.innerText = 'Berhasil! Wallpaper dikirim ke TV.';\n" +
+                "          setTimeout(() => {\n" +
+                "            progressWrap.style.display = 'none';\n" +
+                "            progressBar.style.width = '0%';\n" +
+                "            document.getElementById('preview-container').style.display = 'none';\n" +
+                "            selectedFile = null;\n" +
+                "            document.getElementById('fileInput').value = '';\n" +
+                "            loadGallery();\n" +
+                "          }, 1500);\n" +
                 "        } else {\n" +
-                "          showError('Gagal memuat naik: ' + xhr.statusText);\n" +
+                "          statusMsg.className = 'status-msg error';\n" +
+                "          statusMsg.innerText = 'Gagal mengunggah foto. Silakan coba lagi.';\n" +
+                "          btn.disabled = false;\n" +
                 "        }\n" +
                 "      };\n" +
-                "\n" +
-                "      xhr.onerror = () => {\n" +
-                "        showError('Sambungan terputus. Pastikan telefon dan TV dalam Wi-Fi yang sama.');\n" +
+                "      xhr.onerror = function() {\n" +
+                "        progressWrap.style.display = 'none';\n" +
+                "        statusMsg.style.display = 'block';\n" +
+                "        statusMsg.className = 'status-msg error';\n" +
+                "        statusMsg.innerText = 'Kesalahan jaringan.';\n" +
+                "        btn.disabled = false;\n" +
                 "      };\n" +
-                "\n" +
                 "      xhr.send(selectedFile);\n" +
                 "    }\n" +
-                "\n" +
-                "    function showError(msg) {\n" +
-                "      btnSubmit.disabled = false;\n" +
-                "      btnSubmit.innerText = 'Cuba Semula';\n" +
-                "      statusMsg.className = 'status-msg error';\n" +
-                "      statusMsg.innerText = '❌ ' + msg;\n" +
-                "      statusMsg.style.display = 'block';\n" +
-                "      progWrap.style.display = 'none';\n" +
-                "    }\n" +
-                "\n" +
                 "    function loadGallery() {\n" +
                 "      fetch('/api/list')\n" +
-                "        .then(r => r.json())\n" +
-                "        .then(items => {\n" +
-                "          const listEl = document.getElementById('gallery-list');\n" +
-                "          const countEl = document.getElementById('photo-count');\n" +
-                "          if (countEl) countEl.innerText = items.length;\n" +
-                "          if (!items || items.length === 0) {\n" +
-                "            listEl.innerHTML = '<div style=\"color:#64748b; font-size:12.5px; padding:12px 0;\">Tiada gambar tersimpan di TV.</div>';\n" +
+                "        .then(res => res.json())\n" +
+                "        .then(data => {\n" +
+                "          const list = document.getElementById('galleryList');\n" +
+                "          if (!data || data.length === 0) {\n" +
+                "            list.innerHTML = '<div style=\"color: #64748b; font-size: 13px; padding: 10px; text-align: center;\">Belum ada foto tersimpan.</div>';\n" +
                 "            return;\n" +
                 "          }\n" +
                 "          let html = '';\n" +
-                "          for (const item of items) {\n" +
-                "            const enc = encodeURIComponent(item.name);\n" +
-                "            html += '<div class=\"photo-row' + (item.active ? ' active' : '') + '\">' +\n" +
-                "              '<img class=\"photo-thumb\" src=\"/thumb?file=' + enc + '\" alt=\"thumb\">' +\n" +
-                "              '<div class=\"photo-meta\">' +\n" +
-                "                '<div class=\"photo-name\">' + (item.active ? '✨ ' : '') + item.name + '</div>' +\n" +
-                "                '<div class=\"photo-sub\">' + item.date + ' • ' + item.size + '</div>' +\n" +
-                "              '</div>' +\n" +
-                "              '<div class=\"photo-btns\">' +\n" +
-                "                '<button class=\"btn-act' + (item.active ? ' active' : '') + '\" onclick=\"selectSingle(\\'' + enc + '\\')\">' +\n" +
-                "                  (item.active ? 'Kekal 📌' : 'Kunci 📌') +\n" +
-                "                '</button>' +\n" +
-                "                '<button class=\"btn-act del\" onclick=\"deletePhoto(\\'' + enc + '\\')\">🗑️</button>' +\n" +
-                "              '</div>' +\n" +
-                "            '</div>';\n" +
-                "          }\n" +
-                "          listEl.innerHTML = html;\n" +
+                "          data.forEach(item => {\n" +
+                "            html += `<div class=\"photo-row ${item.active ? 'active' : ''}\">\n" +
+                "              <img class=\"photo-thumb\" src=\"/thumb?file=${encodeURIComponent(item.name)}\" alt=\"\"> \n" +
+                "              <div class=\"photo-meta\">\n" +
+                "                <div class=\"photo-name\">${item.name}</div>\n" +
+                "                <div class=\"photo-sub\">${item.size} • ${item.date}</div>\n" +
+                "              </div>\n" +
+                "              <div class=\"photo-btns\">\n" +
+                "                <button class=\"btn-act ${item.active ? 'active' : ''}\" onclick=\"selectPhoto('${item.name}')\">${item.active ? 'Aktif' : 'Pilih'}</button>\n" +
+                "                <button class=\"btn-act del\" onclick=\"deletePhoto('${item.name}')\">Hapus</button>\n" +
+                "              </div>\n" +
+                "            </div>`;\n" +
+                "          });\n" +
+                "          list.innerHTML = html;\n" +
                 "        })\n" +
-                "        .catch(() => {});\n" +
-                "    }\n" +
-                "\n" +
-                "    function selectSingle(fileName) {\n" +
-                "      fetch('/api/select?file=' + fileName, { method: 'POST' })\n" +
-                "        .then(r => r.json())\n" +
-                "        .then(() => {\n" +
-                "          loadGallery();\n" +
+                "        .catch(err => {\n" +
+                "          document.getElementById('galleryList').innerHTML = '<div style=\"color: #f87171; font-size: 13px; padding: 10px;\">Gagal memuat galeri.</div>';\n" +
                 "        });\n" +
                 "    }\n" +
-                "\n" +
-                "    function deletePhoto(fileName) {\n" +
-                "      if (!confirm('Padam gambar ini dari skrin TV?')) return;\n" +
-                "      fetch('/api/delete?file=' + fileName, { method: 'POST' })\n" +
-                "        .then(r => r.json())\n" +
-                "        .then(() => {\n" +
-                "          loadGallery();\n" +
-                "        });\n" +
+                "    function selectPhoto(name) {\n" +
+                "      fetch('/api/select?file=' + encodeURIComponent(name), { method: 'POST' })\n" +
+                "        .then(() => loadGallery());\n" +
                 "    }\n" +
-                "\n" +
-                "    function setSlideshow() {\n" +
+                "    function deletePhoto(name) {\n" +
+                "      if (confirm('Hapus foto ini?')) {\n" +
+                "        fetch('/api/delete?file=' + encodeURIComponent(name), { method: 'POST' })\n" +
+                "          .then(() => loadGallery());\n" +
+                "      }\n" +
+                "    }\n" +
+                "    function toggleSlideshow() {\n" +
                 "      fetch('/api/slideshow', { method: 'POST' })\n" +
-                "        .then(r => r.json())\n" +
-                "        .then(() => {\n" +
-                "          loadGallery();\n" +
-                "          alert('Mod putaran semua gambar aktif pada TV.');\n" +
-                "        });\n" +
+                "        .then(() => alert('Mode slideshow diaktifkan di TV!'));\n" +
                 "    }\n" +
-                "\n" +
-                "    // Muat galeri gambar sebaik sahaja laman dibuka\n" +
                 "    loadGallery();\n" +
                 "  </script>\n" +
                 "</body>\n" +
