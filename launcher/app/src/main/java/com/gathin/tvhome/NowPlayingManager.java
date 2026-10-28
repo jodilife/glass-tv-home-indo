@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * Manages active music playback detection strictly for Spotify and YouTube Music.
+ * Manages active music playback detection strictly for Spotify, YouTube Music, and Meld.
  */
 public final class NowPlayingManager {
     private static final String TAG = "TvHome.NowPlaying";
@@ -39,7 +39,9 @@ public final class NowPlayingManager {
         return pkg.equals("com.spotify.tv.android")
                 || pkg.equals("com.spotify.music")
                 || pkg.equals("com.google.android.apps.youtube.music")
-                || pkg.equals("com.google.android.youtube.tvmusic");
+                || pkg.equals("com.google.android.youtube.tvmusic")
+                || pkg.equals("it.francescograzioso.meld")
+                || pkg.equals("com.francescograzioso.meld");
     }
 
     public static class MediaInfo {
@@ -189,7 +191,7 @@ public final class NowPlayingManager {
                 try {
                     List<MediaController> controllers = msm.getActiveSessions(cn);
                     if (controllers != null && !controllers.isEmpty()) {
-                        // Priority 1: Actively playing controller from Spotify or YouTube Music
+                        // Priority 1: Actively playing controller from supported music apps
                         for (MediaController mc : controllers) {
                             if (mc == null || !isAllowedMusicApp(mc.getPackageName())) continue;
                             PlaybackState state = mc.getPlaybackState();
@@ -198,7 +200,7 @@ public final class NowPlayingManager {
                                 break;
                             }
                         }
-                        // Priority 2: Paused/Buffering controller from Spotify or YouTube Music
+                        // Priority 2: Paused/Buffering controller
                         if (activeController == null) {
                             for (MediaController mc : controllers) {
                                 if (mc == null || !isAllowedMusicApp(mc.getPackageName())) continue;
@@ -291,7 +293,7 @@ public final class NowPlayingManager {
                 }
             }
 
-            // Fallback: check notification extras ONLY for Spotify and YouTube Music
+            // Fallback: check notification extras for supported music apps
             if (MediaNotificationListener.isConnected()) {
                 try {
                     StatusBarNotification[] sbns = MediaNotificationListener.getInstance().getActiveNotifications();
@@ -307,7 +309,7 @@ public final class NowPlayingManager {
                                 CharSequence nText = extras.getCharSequence(Notification.EXTRA_TEXT);
                                 if (nTitle != null && nTitle.length() > 0) {
                                     if (title.isEmpty()) {
-                                        if (!"Spotify".equalsIgnoreCase(nTitle.toString()) && !"YouTube".equalsIgnoreCase(nTitle.toString())) {
+                                        if (!"Spotify".equalsIgnoreCase(nTitle.toString()) && !"YouTube".equalsIgnoreCase(nTitle.toString()) && !"Meld".equalsIgnoreCase(nTitle.toString())) {
                                             title = nTitle.toString();
                                             if (nText != null && !"Spotify".equalsIgnoreCase(nText.toString())) {
                                                 artist = nText.toString();
@@ -352,7 +354,6 @@ public final class NowPlayingManager {
                 pkg = activeController.getPackageName();
             }
 
-            // Strictly check if music is active in Spotify or YouTube Music
             if (activeController == null && title.isEmpty()) {
                 currentInfo = new MediaInfo(false, "", "", "", "", null, null);
             } else if (!isAllowedMusicApp(pkg)) {
@@ -382,6 +383,7 @@ public final class NowPlayingManager {
         } catch (Exception e) {
             if ("com.spotify.tv.android".equals(pkg) || "com.spotify.music".equals(pkg)) return "Spotify";
             if (pkg.contains("youtube")) return "YouTube Music";
+            if (pkg.contains("meld")) return "Meld";
             return pkg;
         }
     }
@@ -478,7 +480,7 @@ public final class NowPlayingManager {
                 } catch (Exception ignored) {}
             }
         }
-        String pkg = currentInfo.packageName.isEmpty() ? "com.spotify.tv.android" : currentInfo.packageName;
+        String pkg = currentInfo.packageName.isEmpty() ? "it.francescograzioso.meld" : currentInfo.packageName;
         try {
             Intent i = context.getPackageManager().getLeanbackLaunchIntentForPackage(pkg);
             if (i == null) {
