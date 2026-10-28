@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
@@ -14,18 +13,17 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 /**
- * The small weather line under the clock (weather_lat / weather_lon): the temperature and sky from
- * Open-Meteo, and the official Air Pollutant Index of the nearest Jabatan Alam Sekitar station from
- * APIMS. The last line is kept, so Home shows it at once and only refreshes it behind.
+ * The small weather line under the clock: temperature and sky from
+ * Open-Meteo, and air quality / PM2.5 index for Indonesia.
  */
 final class HomeWeather {
     private static final String TAG = "TvHome.Weather";
     static final long REFRESH_MS = 15 * 60_000L;
-    private static final String DOE = "https://eqms.doe.gov.my/api3/publicportalapims/mapcaqm";
-    /** Malaysian API bands, with DOE's colours: blue, green, yellow, orange, red. */
-    private static final int[] API_TOP = {50, 100, 200, 300, 9999};
+    
+    // Standar indeks kualitas udara (berdasarkan PM2.5 / AQI standar umum)
+    private static final int[] AQI_TOP = {50, 100, 200, 300, 9999};
     static final int[] API_COLOR = {0xFF3D8BFF, 0xFF34C759, 0xFFFFD60A, 0xFFFF9F0A, 0xFFFF453A};
-    private static final String[] API_NAME = {"Good", "Moderate", "Unhealthy", "Very unhealthy", "Hazardous"};
+    private static final String[] API_NAME = {"Baik", "Sedang", "Tidak Sehat", "Sangat Tidak Sehat", "Berbahaya"};
 
     /** What the line says: the weather part, the API part and its colour; either part may be empty. */
     static final class Line {
@@ -56,7 +54,6 @@ final class HomeWeather {
         SharedPreferences p = prefs(ctx);
         String w = p.getString("weather", null), a = p.getString("api", "");
         if (w != null && !w.isEmpty() && !Character.isDigit(w.charAt(0))) {
-            // An older line, with an emoji: dropped, and fetched again at once.
             w = "";
             p.edit().putLong("at", 0).putString("weather", "").apply();
         }
@@ -69,40 +66,33 @@ final class HomeWeather {
         String weather = "", api = "";
         int color = 0, code = -1;
         boolean day = true;
+        
+        // 1. Fetch Cuaca dari Open-Meteo
         try {
             JSONObject now = new JSONObject(get("https://api.open-meteo.com/v1/forecast?latitude=" + lat + "&longitude=" + lon
-                    + "&current=temperature_2m,weather_code,is_day&timezone=Asia%2FKuala_Lumpur")).getJSONObject("current");
+                    + "&current=temperature_2m,weather_code,is_day&timezone=auto")).getJSONObject("current");
             code = now.optInt("weather_code");
             day = now.optInt("is_day", 1) == 1;
             weather = Math.round(now.optDouble("temperature_2m")) + "°  " + describe(code);
         } catch (Exception e) {
             Log.w(TAG, "weather failed: " + e.getMessage());
         }
+
+        // 2. Fetch Kualitas Udara (AQI / PM2.5) dari Open-Meteo Air Quality API untuk wilayah Indonesia
         try {
-            JSONArray all = new JSONObject(get(DOE)).getJSONArray("data");
-            JSONObject near = null;
-            double best = Double.MAX_VALUE;
-            for (int i = 0; i < all.length(); i++) {
-                JSONObject st = all.getJSONObject(i);
-                if (st.optInt("API", -1) < 0) continue;
-                double dx = st.optDouble("LONGITUDE") - lon, dy = st.optDouble("LATITUDE") - lat, d = dx * dx + dy * dy;
-                if (d < best) {
-                    best = d;
-                    near = st;
-                }
-            }
-            // Only a station near home (about 80 km): the network covers Malaysia, and outside it the
-            // nearest one would be far away and say nothing about the air here.
-            if (near != null && best < 0.5) {
-                int value = near.getInt("API"), band = 0;
-                while (band < API_TOP.length - 1 && value > API_TOP[band]) band++;
-                api = "API " + value + " " + API_NAME[band];
-                color = API_COLOR[band];
-            }
+            JSONObject aqNow = new JSONObject(get("https://air-quality-api.open-meteo.com/v1/air-quality?latitude=" + lat + "&longitude=" + lon
+                    + "&current=us_aqi,pm2_5")).getJSONObject("current");
+            
+            int aqiValue = (int) Math.round(aqNow.optDouble("us_aqi", aqNow.optDouble("pm2_5", 25.0)));
+            int band = 0;
+            while (band < AQI_TOP.length - 1 && aqiValue > AQI_TOP[band]) band++;
+            
+            api = "AQI " + aqiValue + " " + API_NAME[band];
+            color = API_COLOR[band];
         } catch (Exception e) {
-            Log.w(TAG, "APIMS failed: " + e.getMessage());
+            Log.w(TAG, "Air Quality fetch failed: " + e.getMessage());
         }
-        // A failed try waits for the next round too, rather than asking again every minute.
+
         SharedPreferences.Editor ed = prefs(ctx).edit().putLong("at", System.currentTimeMillis());
         if (weather.isEmpty() && api.isEmpty()) {
             ed.apply();
@@ -114,19 +104,18 @@ final class HomeWeather {
     }
 
     private static String describe(int code) {
-        if (code == 0) return "Clear";
-        if (code == 1) return "Mainly clear";
-        if (code == 2) return "Partly cloudy";
-        if (code == 3) return "Cloudy";
-        if (code == 45 || code == 48) return "Haze";
-        if (code >= 51 && code <= 57) return "Drizzle";
-        if (code >= 61 && code <= 67) return code >= 65 ? "Heavy rain" : "Rain";
-        if (code >= 80 && code <= 82) return "Showers";
-        if (code >= 95) return "Thunderstorm";
+        if (code == 0) return "Cerah";
+        if (code == 1) return "Cerah Berawan";
+        if (code == 2) return "Berawan Sebagian";
+        if (code == 3) return "Berawan";
+        if (code == 45 || code == 48) return "Kabut";
+        if (code >= 51 && code <= 57) return "Gerimis";
+        if (code >= 61 && code <= 67) return code >= 65 ? "Hujan Lebat" : "Hujan";
+        if (code >= 80 && code <= 82) return "Hujan Lokal";
+        if (code >= 95) return "Badai Petir";
         return "";
     }
 
-    /** The sky as a small vector symbol (not an emoji: the colour emoji font alone costs Home megabytes). */
     static int icon(int code, boolean day) {
         if (code == 0) return day ? R.drawable.wx_sun : R.drawable.wx_moon;
         if (code == 1 || code == 2) return day ? R.drawable.wx_partly : R.drawable.wx_partly_night;
