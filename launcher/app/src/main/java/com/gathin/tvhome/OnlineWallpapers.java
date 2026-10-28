@@ -18,6 +18,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -55,41 +56,41 @@ final class OnlineWallpapers {
 
     // Built-in curated catalog of dark, moody, atmospheric 4K desktop wallpapers (Unsplash)
     private static final WallpaperItem[] CURATED_CATALOG = new WallpaperItem[]{
-            // Malaysia: Tempat Menarik di Malaysia (16 Koleksi Pexels 4K Ultra HD)
+            // Indonesia: Tempat Menarik di Indonesia (16 Koleksi Pexels 4K Ultra HD)
             new WallpaperItem("https://images.pexels.com/photos/40168956/pexels-photo-40168956.jpeg?auto=compress&cs=tinysrgb&w=3840&h=2160",
-                    "Orangutan Rimba Borneo", "Spesies ikonik hidupan liar di kanopi hutan hujan tropika Borneo, khazanah alam semula jadi", "Malaysia_Sabah"),
+                    "Orangutan Rimba Borneo", "Spesies ikonik hidupan liar di kanopi hutan hujan tropika Borneo, khazanah alam semula jadi", "Indonesia_Kalimantan"),
             new WallpaperItem("https://images.pexels.com/photos/36767161/pexels-photo-36767161.jpeg?auto=compress&cs=tinysrgb&w=3840&h=2160",
-                    "Siluet Senja Kuala Lumpur", "Garis langit metropolis ibu negara berlatarkan kilauan warna merah saga dan jingga waktu senja", "Malaysia_WP"),
+                    "Siluet Senja Jakarta", "Garis langit metropolis ibu negara berlatarkan kilauan warna merah saga dan jingga waktu senja", "Indonesia_Jakarta"),
             new WallpaperItem("https://images.pexels.com/photos/338416/pexels-photo-338416.jpeg?auto=compress&cs=tinysrgb&w=3840&h=2160",
-                    "Masjid Putra & Tasik Putrajaya", "Keindahan seni bina kubah merah jambu Masjid Putra membiaskan pantulan anggun di permukaan tasik tenang", "Malaysia_Putrajaya"),
+                    "Monas & Lanskap Jakarta", "Keindahan tugu kebanggaan nasional Monumen Nasional membiaskan pantulan anggun di kota megapolitan", "Indonesia_Jakarta"),
             new WallpaperItem("https://images.pexels.com/photos/33676568/pexels-photo-33676568.jpeg?auto=compress&cs=tinysrgb&w=3840&h=2160",
-                    "Puncak Menara Berkembar KLCC", "Menara Berkembar Petronas tersergam megah meredah lautan awan keemasan di ufuk Kuala Lumpur", "Malaysia_WP"),
+                    "Pencakar Langit SCBD Jakarta", "Gedung-gedung tinggi pusat keuangan tersergam megah meredah lautan awan keemasan di ufuk Jakarta", "Indonesia_Jakarta"),
             new WallpaperItem("https://images.pexels.com/photos/39690291/pexels-photo-39690291.jpeg?auto=compress&cs=tinysrgb&w=3840&h=2160",
-                    "Masjid Selat Melaka", "Masjid terapung tersohor di pesisir Selat Melaka disinari gemerlap lampu malam dan langit tembaga", "Malaysia_Melaka"),
+                    "Kota Tua Jakarta", "Kawasan bersejarah tersohor di pesisir Jakarta disinari gemerlap lampu malam dan langit tembaga", "Indonesia_Jakarta"),
             new WallpaperItem("https://images.pexels.com/photos/33708542/pexels-photo-33708542.jpeg?auto=compress&cs=tinysrgb&w=3840&h=2160",
-                    "Calet Pergunungan Kundasang", "Kediaman unik di lereng bukit menghijau berlatarbelakangkan udara nyaman banjaran tanah tinggi Sabah", "Malaysia_Sabah"),
+                    "Vila Pegunungan Puncak", "Kediaman unik di lereng bukit menghijau berlatarbelakangkan udara nyaman banjaran tanah tinggi Jawa Barat", "Indonesia_JawaBarat"),
             new WallpaperItem("https://images.pexels.com/photos/14776919/pexels-photo-14776919.jpeg?auto=compress&cs=tinysrgb&w=3840&h=2160",
-                    "Jalan Berliku Banjaran Titiwangsa", "Laluan berliku meredah rabung pergunungan hijau yang diselimuti kabut tebal waktu fajar", "Malaysia_Pahang"),
+                    "Jalan Berliku Pegunungan Bromo", "Laluan berliku meredah rabung pergunungan berapi yang diselimuti kabut tebal waktu fajar", "Indonesia_JawaTimur"),
             new WallpaperItem("https://images.pexels.com/photos/5224545/pexels-photo-5224545.jpeg?auto=compress&cs=tinysrgb&w=3840&h=2160",
-                    "Fajar Lembah Sungai Pahang", "Limpahan cahaya emas mentari pagi menyinari aliran sungai permai dan perkampungan pesisir bukit", "Malaysia_Pahang"),
+                    "Fajar Lembah Bali", "Limpahan cahaya emas mentari pagi menyinari terasering sawah permai dan perkampungan pesisir bukit", "Indonesia_Bali"),
             new WallpaperItem("https://images.pexels.com/photos/11643318/pexels-photo-11643318.jpeg?auto=compress&cs=tinysrgb&w=3840&h=2160",
-                    "Senja Merah Lembah Sungai", "Panorama matahari terbenam membiaskan rona jingga tembaga di sepanjang liku sungai dan bukit bukau", "Malaysia_Pahang"),
+                    "Senja Merah Pantai Kuta", "Panorama matahari terbenam membiaskan rona jingga tembaga di sepanjang pantai ikonik Bali", "Indonesia_Bali"),
             new WallpaperItem("https://images.pexels.com/photos/28727775/pexels-photo-28727775.jpeg?auto=compress&cs=tinysrgb&w=3840&h=2160",
-                    "Pesisiran Pantai Tanjung Balau", "Kejernihan air laut membiru dan keunikan tanjung berbatu di Desaru menghadap Laut China Selatan", "Malaysia_Johor"),
+                    "Pesisiran Pantai Belitung", "Kejernihan air laut membiru dan keunikan batu granit raksasa menghadap Laut Jawa", "Indonesia_BangkaBelitung"),
             new WallpaperItem("https://images.pexels.com/photos/38188372/pexels-photo-38188372.jpeg?auto=compress&cs=tinysrgb&w=3840&h=2160",
-                    "Jambatan Angkat Terengganu", "Seni bina jambatan angkat ikonik Kuala Terengganu bermandikan biasan sinaran matahari terbenam", "Malaysia_Terengganu"),
+                    "Jembatan Suramadu Madura", "Seni bina jambatan ikonik penghubung Surabaya-Madura bermandikan biasan sinaran matahari terbenam", "Indonesia_JawaTimur"),
             new WallpaperItem("https://images.pexels.com/photos/13890758/pexels-photo-13890758.jpeg?auto=compress&cs=tinysrgb&w=3840&h=2160",
-                    "Pekan Diraja Kuala Kangsar", "Pemandangan udara bandar warisan permai di tebingan Sungai Perak diapit kehijauan alam tropika", "Malaysia_Perak"),
+                    "Pekan Bersejarah Yogyakarta", "Pemandangan udara bandar warisan budaya permai diapit keagungan tradisi Nusantara", "Indonesia_Yogyakarta"),
             new WallpaperItem("https://images.pexels.com/photos/139974/pexels-photo-139974.jpeg?auto=compress&cs=tinysrgb&w=3840&h=2160",
-                    "Perahu Nelayan Jalur Gemilang", "Bot nelayan tradisional berlabuh tenang di muara sungai ketika langit senja berona merah jambu", "Malaysia_Terengganu"),
+                    "Perahu Nelayan Tradisional", "Bot nelayan tradisional berlabuh tenang di muara pantai ketika langit senja berona merah jambu", "Indonesia_Sulawesi"),
             new WallpaperItem("https://images.pexels.com/photos/5649468/pexels-photo-5649468.jpeg?auto=compress&cs=tinysrgb&w=3840&h=2160",
-                    "Masjid Negeri Shah Alam", "Kubah biru tersergam indah dan empat menara bercahaya Masjid Sultan Salahuddin Abdul Aziz Shah pada waktu malam", "Malaysia_Selangor"),
+                    "Masjid Istiqlal Jakarta", "Kubah megah tersergam indah dan menara bercahaya Masjid Istiqlal pada waktu malam", "Indonesia_Jakarta"),
             new WallpaperItem("https://images.pexels.com/photos/130576/pexels-photo-130576.jpeg?auto=compress&cs=tinysrgb&w=3840&h=2160",
-                    "Ladang Teh Cameron Highlands", "Hamparan bukit teh hijau beralun segar di bawah langit biru cerah tanah tinggi banjaran Pahang", "Malaysia_Pahang"),
+                    "Ladang Teh Puncak Bogor", "Hamparan bukit teh hijau beralun segar di bawah langit biru cerah kawasan pergunungan Jawa", "Indonesia_JawaBarat"),
             new WallpaperItem("https://images.pexels.com/photos/35905094/pexels-photo-35905094.jpeg?auto=compress&cs=tinysrgb&w=3840&h=2160",
-                    "Beca Berhias Warisan Melaka", "Keunikan beca pelancongan berhias bunga dan lagu ceria menelusuri lorong warisan bersejarah bandar raya Melaka", "Malaysia_Melaka"),
+                    "Andong Warisan Yogyakarta", "Keunikan kereta kuda tradisional menelusuri lorong warisan bersejarah kota kesultanan", "Indonesia_Yogyakarta"),
 
-            // Nature & Landscapes (Alam Semula Jadi - Pexels & Unsplash 4K)
+            // Nature & Landscapes (Alam Semula Jadi)
             new WallpaperItem("https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=3840&h=2160&q=80",
                     "Moody Alpine Mountains", "Silhouetted mountain peaks under starry skies", "Landscape"),
             new WallpaperItem("https://images.pexels.com/photos/1366919/pexels-photo-1366919.jpeg?auto=compress&cs=tinysrgb&w=3840&h=2160",
@@ -111,7 +112,7 @@ final class OnlineWallpapers {
             new WallpaperItem("https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=3840&h=2160&q=80",
                     "Dark Volcanic Landscape", "Black volcanic terrain and quiet minimalist horizon", "Nature"),
 
-            // Cityscape & Architecture (Pencakar Langit & Bandar - Pexels & Unsplash 4K)
+            // Cityscape & Architecture (Pencakar Langit & Bandar)
             new WallpaperItem("https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=3840&h=2160&q=80",
                     "Tokyo Cyberpunk Alley", "Moody neon reflections in a narrow Tokyo alleyway", "Cityscape"),
             new WallpaperItem("https://images.pexels.com/photos/374870/pexels-photo-374870.jpeg?auto=compress&cs=tinysrgb&w=3840&h=2160",
@@ -125,7 +126,7 @@ final class OnlineWallpapers {
             new WallpaperItem("https://images.unsplash.com/photo-1494548162494-384bba4ab999?auto=format&fit=crop&w=3840&h=2160&q=80",
                     "Dark Foggy Suspension Bridge", "Golden Gate towers emerging through evening fog", "Architecture"),
 
-            // Space & Astronomy (Angkasa & Kosmos - Unsplash 4K)
+            // Space & Astronomy (Angkasa & Kosmos)
             new WallpaperItem("https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=3840&h=2160&q=80",
                     "Night Earth Orbit", "Planet Earth illuminated at night from outer space", "Space"),
             new WallpaperItem("https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=3840&h=2160&q=80",
@@ -135,7 +136,7 @@ final class OnlineWallpapers {
             new WallpaperItem("https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?auto=format&fit=crop&w=3840&h=2160&q=80",
                     "Cosmic Dark Starfield", "Deep black void speckled with distant galaxies", "Space"),
 
-            // Ocean & Water (Lautan & Pantai - Pexels & Unsplash 4K)
+            // Ocean & Water (Lautan & Pantai)
             new WallpaperItem("https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=3840&h=2160&q=80",
                     "Deep Underwater Abyss", "Sunlight penetrating into the dark deep ocean", "Underwater"),
             new WallpaperItem("https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=3840&h=2160&q=80",
@@ -149,19 +150,19 @@ final class OnlineWallpapers {
             new WallpaperItem("https://images.pexels.com/photos/1295138/pexels-photo-1295138.jpeg?auto=compress&cs=tinysrgb&w=3840&h=2160",
                     "Dramatic Sea Cliffs", "Dark oceanic cliffs meeting moody breaking waves", "Coast"),
 
-            // Minimalist & Atmospheric (Minimalis Gelap OLED - Unsplash 4K Curated from https://unsplash.com/s/photos/dark-wallpaper)
+            // Minimalist & Atmospheric (Minimalis Gelap OLED)
             new WallpaperItem("https://images.unsplash.com/photo-1484950763426-56b5bf172dbb?auto=format&fit=crop&w=3840&h=2160&q=80",
                     "Siluet Kenderaan 4x4", "Siluet kenderaan pacuan 4 roda di bawah hamparan bintang malam sepi", "Minimalist_OLED"),
             new WallpaperItem("https://images.unsplash.com/photo-1533134486753-c833f0ed4866?auto=format&fit=crop&w=3840&h=2160&q=80",
-                    "Gelombang Pasir Kelabu", "Lengkung pasir kelabu berkabus di pesisiran pantai Karekare New Zealand", "Minimalist_OLED"),
+                    "Gelombang Pasir Kelabu", "Lengkung pasir kelabu berkabus di pesisiran pantai", "Minimalist_OLED"),
             new WallpaperItem("https://images.unsplash.com/photo-1762417108293-91614140073a?auto=format&fit=crop&w=3840&h=2160&q=80",
                     "Tekstur Silinder Hitam OLED", "Seni bina permukaan silinder hitam 3D bertekstur gelap minimalis", "Minimalist_OLED"),
             new WallpaperItem("https://images.unsplash.com/photo-1507752533523-5186b0bc4c43?auto=format&fit=crop&w=3840&h=2160&q=80",
-                    "Pencakar Langit Senja Emas", "Panorama bandar raya metropolitan Montreal disinari biasan cahaya senja keemasan", "Minimalist_OLED"),
+                    "Pencakar Langit Senja Emas", "Panorama bandar raya metropolitan disinari biasan cahaya senja keemasan", "Minimalist_OLED"),
             new WallpaperItem("https://images.unsplash.com/photo-1470813740244-df37b8c1edcb?auto=format&fit=crop&w=3840&h=2160&q=80",
                     "Malam Bintang Membiru", "Keindahan galaksi dan gugusan bintang malam membiru di balik jurang batu", "Minimalist_OLED"),
             new WallpaperItem("https://images.unsplash.com/photo-1509023464722-18d996393ca8?auto=format&fit=crop&w=3840&h=2160&q=80",
-                    "Gunung Fuji & Tasik Senyap", "Siluet Gunung Fuji di keheningan malam tasik Jepun berlatarkan langit gelap pekat", "Minimalist_OLED"),
+                    "Siluet Gunung & Tasik Senyap", "Siluet pergunungan di keheningan malam tasik berlatarkan langit gelap pekat", "Minimalist_OLED"),
             new WallpaperItem("https://images.unsplash.com/photo-1491466424936-e304919aada7?auto=format&fit=crop&w=3840&h=2160&q=80",
                     "Gelombang Pasir Hitam OLED", "Lengkungan bukit pasir hitam minimalis dengan kontras bayang sempurna", "Minimalist_OLED"),
             new WallpaperItem("https://images.unsplash.com/photo-1622737133809-d95047b9e673?auto=format&fit=crop&w=3840&h=2160&q=80",
@@ -183,7 +184,7 @@ final class OnlineWallpapers {
             new WallpaperItem("https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=3840&h=2160&q=80",
                     "Bumi Malam & Orbit Hitam", "Ufuk biru Bumi di tengah kekosongan kosmos hitam pekat", "Minimalist_OLED"),
             new WallpaperItem("https://images.unsplash.com/photo-1519751138087-5bf79df62d5b?auto=format&fit=crop&w=3840&h=2160&q=80",
-                    "Siluet Dedaun Monstera", "Dedaun tropika gelap berlatarbelakangkan bayang hitam misteri", "Minimalist_OLED"),
+                    "Siluet Dedaun Tropika", "Dedaun tropika gelap berlatarbelakangkan bayang hitam misteri", "Minimalist_OLED"),
             new WallpaperItem("https://images.unsplash.com/photo-1511447333015-45b65e60f6d5?auto=format&fit=crop&w=3840&h=2160&q=80",
                     "Prisma Cahaya Gelap", "Pancarona spektrum cahaya neon halus di ruang kegelapan mutlak", "Minimalist_OLED"),
             new WallpaperItem("https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=3840&h=2160&q=80",
@@ -225,12 +226,12 @@ final class OnlineWallpapers {
         if (itemCat == null) return false;
         String ic = itemCat.toLowerCase(Locale.ROOT);
         String sc = selectedCat.toLowerCase(Locale.ROOT);
-        if (sc.startsWith("malaysia_")) {
-            String state = sc.substring("malaysia_".length());
-            return ic.contains(state);
+        if (sc.startsWith("indonesia_")) {
+            String region = sc.substring("indonesia_".length());
+            return ic.contains(region);
         }
-        if (sc.equals("malaysia") || sc.equals("malaysia_all")) {
-            return ic.contains("malay");
+        if (sc.equals("indonesia") || sc.equals("indonesia_all")) {
+            return ic.contains("indonesia");
         }
         if (sc.contains("sky") || sc.contains("arch") || sc.contains("city")) {
             return ic.contains("sky") || ic.contains("arch") || ic.contains("city") || ic.contains("urban");
@@ -246,9 +247,6 @@ final class OnlineWallpapers {
         }
         if (sc.contains("minim") || sc.contains("oled") || sc.contains("dark")) {
             return ic.contains("minim") || ic.contains("oled") || ic.contains("dark") || ic.contains("atmos") || ic.contains("weather");
-        }
-        if (sc.contains("malay")) {
-            return ic.contains("malay");
         }
         return ic.contains(sc);
     }
@@ -485,117 +483,96 @@ final class OnlineWallpapers {
 
             int code = conn.getResponseCode();
             if (code != HttpURLConnection.HTTP_OK) {
-                Log.w(TAG, "HTTP " + code + " for " + strUrl);
+                return false;
+            }
+
+            long length = conn.getContentLengthLong();
+            if (length > MAX_IMAGE_BYTES) {
                 return false;
             }
 
             in = conn.getInputStream();
             out = new FileOutputStream(dest);
-            byte[] buf = new byte[8192];
+            byte[] buffer = new byte[8192];
+            long totalBytes = 0;
             int read;
-            long total = 0;
-            while ((read = in.read(buf)) != -1) {
-                total += read;
-                if (total > MAX_IMAGE_BYTES) {
-                    Log.w(TAG, "Image exceeds byte limit, aborting: " + strUrl);
+            while ((read = in.read(buffer)) != -1) {
+                totalBytes += read;
+                if (totalBytes > MAX_IMAGE_BYTES) {
                     return false;
                 }
-                out.write(buf, 0, read);
+                out.write(buffer, 0, read);
             }
             out.flush();
-            return total > 10_000;
+            return dest.exists() && dest.length() > 50_000;
         } catch (Exception e) {
-            Log.w(TAG, "Download error: " + e.getMessage());
             return false;
         } finally {
-            try { if (in != null) in.close(); } catch (Exception ignored) {}
-            try { if (out != null) out.close(); } catch (Exception ignored) {}
-            if (conn != null) conn.disconnect();
+            try {
+                if (in != null) in.close();
+                if (out != null) out.close();
+                if (conn != null) conn.disconnect();
+            } catch (Exception ignored) {}
         }
     }
 
     private static List<WallpaperItem> fetchFeed(String feedUrl) {
-        List<WallpaperItem> list = new ArrayList<>();
+        List<WallpaperItem> items = new ArrayList<>();
         HttpURLConnection conn = null;
+        BufferedReader reader = null;
         try {
             URL url = new URL(feedUrl);
             conn = (HttpURLConnection) url.openConnection();
-            conn.setConnectTimeout(8_000);
-            conn.setReadTimeout(10_000);
-            conn.setRequestProperty("User-Agent", "Mozilla/5.0 (GlassTV; Android)");
+            conn.setConnectTimeout(8000);
+            conn.setReadTimeout(10000);
+            conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Linux; Android 10; TV) GlassTV");
             conn.connect();
-            if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) return list;
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
+            if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                return items;
+            }
+
             StringBuilder sb = new StringBuilder();
+            reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
             String line;
-            while ((line = reader.readLine()) != null) sb.append(line);
-            reader.close();
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
 
-            String raw = sb.toString().trim();
-            if (raw.startsWith("[")) {
-                JSONArray arr = new JSONArray(raw);
-                for (int i = 0; i < arr.length(); i++) {
-                    Object o = arr.get(i);
-                    if (o instanceof String) {
-                        list.add(new WallpaperItem((String) o, "Online Wallpaper", "", "Web Server"));
-                    } else if (o instanceof JSONObject) {
-                        JSONObject obj = (JSONObject) o;
-                        String u = obj.optString("url");
-                        if (!u.isEmpty()) {
-                            list.add(new WallpaperItem(
-                                    u,
-                                    obj.optString("title", "Online Wallpaper"),
-                                    obj.optString("description", ""),
-                                    obj.optString("category", "Web Server")));
-                        }
-                    }
-                }
-            } else if (raw.startsWith("{")) {
-                JSONObject obj = new JSONObject(raw);
-                JSONArray arr = obj.optJSONArray("wallpapers");
-                if (arr == null) arr = obj.optJSONArray("images");
-                if (arr != null) {
-                    for (int i = 0; i < arr.length(); i++) {
-                        Object o = arr.get(i);
-                        if (o instanceof String) {
-                            list.add(new WallpaperItem((String) o, "Online Wallpaper", "", "Web Server"));
-                        } else if (o instanceof JSONObject) {
-                            JSONObject item = (JSONObject) o;
-                            String u = item.optString("url");
-                            if (!u.isEmpty()) {
-                                list.add(new WallpaperItem(
-                                        u,
-                                        item.optString("title", "Online Wallpaper"),
-                                        item.optString("description", ""),
-                                        item.optString("category", "Web Server")));
-                            }
-                        }
-                    }
+            JSONArray arr = new JSONArray(sb.toString());
+            for (int i = 0; i < arr.length(); i++) {
+                JSONObject obj = arr.getJSONObject(i);
+                String u = obj.optString("url", "");
+                String t = obj.optString("title", "4K Wallpaper");
+                String desc = obj.optString("description", "");
+                String cat = obj.optString("category", "Desktop");
+                if (!u.isEmpty()) {
+                    items.add(new WallpaperItem(u, t, desc, cat));
                 }
             }
         } catch (Exception e) {
-            Log.w(TAG, "Feed parse error: " + e);
+            Log.w(TAG, "Failed fetching feed: " + e.getMessage());
         } finally {
-            if (conn != null) conn.disconnect();
+            try {
+                if (reader != null) reader.close();
+                if (conn != null) conn.disconnect();
+            } catch (Exception ignored) {}
         }
-        return list;
+        return items;
     }
 
-    private static void pruneCache(File dir) {
-        File[] files = dir.listFiles((d, name) -> name.endsWith(".jpg"));
+    private static void pruneCache(File d) {
+        File[] files = d.listFiles((dir, name) -> name.endsWith(".jpg"));
         if (files == null || files.length <= MAX_CACHE_FILES) return;
 
-        List<File> list = new ArrayList<>();
-        Collections.addAll(list, files);
-        // Sort oldest first
-        Collections.sort(list, (a, b) -> Long.compare(a.lastModified(), b.lastModified()));
-
-        int toRemove = list.size() - MAX_CACHE_FILES;
-        for (int i = 0; i < toRemove; i++) {
-            File f = list.get(i);
-            File txt = new File(dir, f.getName().replace(".jpg", ".txt"));
+        // Sort by last modified ascending (oldest first)
+        Arrays.sort(files, (a, b) -> Long.compare(a.lastModified(), b.lastModified()));
+        int removeCount = files.length - MAX_CACHE_FILES;
+        for (int i = 0; i < removeCount; i++) {
+            File f = files[i];
+            String name = f.getName();
             f.delete();
+            File txt = new File(d, name.replace(".jpg", ".txt"));
             if (txt.exists()) txt.delete();
         }
     }
