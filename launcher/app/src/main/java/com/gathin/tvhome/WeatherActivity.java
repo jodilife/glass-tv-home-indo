@@ -124,8 +124,8 @@ public class WeatherActivity extends Activity {
     private void showLocationPickerDialog() {
         String activeRegion = AppLocationManager.getActiveRegion(this);
         CharSequence[] topOptions = new CharSequence[]{
-                "📍 Pilih Bandar / Stesen (" + activeRegion + ")",
-                "🌏 Tukar Negara / Region Asia (Default: Malaysia)",
+                "📍 Pilih Kota / Wilayah (" + activeRegion + ")",
+                "🌏 Tukar Negara / Region Asia (Default: Indonesia)",
                 "✨ Tetapkan Suasana Latar Cuaca (Cerah, Hujan, Ribut, Malam)"
         };
 
@@ -216,7 +216,7 @@ public class WeatherActivity extends Activity {
     private void showStationListDialog(String region) {
         final List<AppLocationManager.Station> stations = AppLocationManager.getStationsForRegion(region);
         if (stations.isEmpty()) {
-            Toast.makeText(this, "Tiada stesen dijumpai bagi " + region, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Tiada kota dijumpai bagi " + region, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -232,7 +232,7 @@ public class WeatherActivity extends Activity {
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog_Alert);
-        builder.setTitle("📍 Pilih Bandar / Stesen (" + region + ")");
+        builder.setTitle("📍 Pilih Kota / Wilayah (" + region + ")");
         builder.setSingleChoiceItems(items, selectedIndex, (dialog, which) -> {
             dialog.dismiss();
             AppLocationManager.Station picked = stations.get(which);
@@ -256,7 +256,7 @@ public class WeatherActivity extends Activity {
         // 2. Header
         Location.Zone chosen = Location.chosen(this);
         String neatLoc = (chosen != null) ? chosen.town : w.location;
-        if (neatLoc == null || neatLoc.isEmpty()) neatLoc = "Kuala Lumpur";
+        if (neatLoc == null || neatLoc.isEmpty()) neatLoc = "Jakarta";
         neatLoc = neatLoc.substring(0, 1).toUpperCase(Locale.ROOT) + neatLoc.substring(1);
         weatherLocation.setText(neatLoc);
 
@@ -275,7 +275,7 @@ public class WeatherActivity extends Activity {
             weatherMainCondition.setText("Mendung");
         }
 
-        weatherMainSub.setText(String.format(Locale.ROOT, "H:%d°  L:%d°", w.highTemp, w.lowTemp));
+        weatherMainSub.setText(String.format(Locale.ROOT, "Tinggi:%d°  Rendah:%d°", w.highTemp, w.lowTemp));
 
         // 3. Hourly Strip (Apple Weather Conditions Card)
         hourlyContainer.removeAllViews();
@@ -296,19 +296,18 @@ public class WeatherActivity extends Activity {
                 rainView.setVisibility(View.VISIBLE);
                 rainView.setText(item.rainChance + "%");
             } else {
-                rainView.setVisibility(View.INVISIBLE); // Keep layout height stable and aligned
+                rainView.setVisibility(View.INVISIBLE);
             }
 
             setupFocusAnimation(v, 1.0f);
             hourlyContainer.addView(v);
 
-            // Default focus on first hourly tile
             if (i == 0) {
                 v.requestFocus();
             }
         }
 
-        // 4. 10-Day Forecast (Apple Weather Vertical List with Temp Spectrum Bar)
+        // 4. 10-Day Forecast
         dailyContainer.removeAllViews();
         int weekMin = 999;
         int weekMax = -999;
@@ -366,24 +365,24 @@ public class WeatherActivity extends Activity {
             sunArcView.setTimes(w.sunrise, w.sunset);
         }
         if (sunsetText != null) {
-            sunsetText.setText(w.sunset != null ? w.sunset : "6:57 PM");
+            sunsetText.setText(w.sunset != null ? w.sunset : "18:00");
         }
 
         if (uvValText != null) {
             uvValText.setText(String.valueOf(w.uvIndex));
         }
         if (uvDescText != null) {
-            if (w.uvIndex <= 2) uvDescText.setText("Low");
-            else if (w.uvIndex <= 5) uvDescText.setText("Moderate");
-            else if (w.uvIndex <= 7) uvDescText.setText("High");
-            else uvDescText.setText("Very High");
+            if (w.uvIndex <= 2) uvDescText.setText("Rendah");
+            else if (w.uvIndex <= 5) uvDescText.setText("Sedang");
+            else if (w.uvIndex <= 7) uvDescText.setText("Tinggi");
+            else uvDescText.setText("Sangat Tinggi");
         }
 
         if (feelsLikeVal != null) {
             feelsLikeVal.setText(w.apparentTemp + "°");
         }
 
-        // Air Quality
+        // Air Quality / ISPU Indonesia
         if (aqiValue != null) aqiValue.setText(String.valueOf(w.aqi));
         if (aqiStatus != null) aqiStatus.setText(w.aqiStatus);
         if (aqiBar != null) aqiBar.setAqi(w.aqi);
@@ -391,7 +390,7 @@ public class WeatherActivity extends Activity {
             if (w.stationPlace != null && !w.stationPlace.isEmpty()) {
                 aqiStation.setText(w.stationPlace);
             } else {
-                aqiStation.setText("SK Putrajaya Presint 18");
+                aqiStation.setText("Monas / Gambir, Jakarta Pusat");
             }
         }
 
@@ -408,10 +407,10 @@ public class WeatherActivity extends Activity {
             pressureGaugeView.setPressure(1014);
         }
 
-        // 6. Footer
+        // 6. Footer (Diubah referensinya ke standar Indonesia / BMKG / Open-Meteo)
         if (weatherFooter != null) {
             weatherFooter.setText(String.format(Locale.ROOT,
-                    "Updated %s  •  Jabatan Alam Sekitar (APIMS)  •  Open-Meteo Atmospheric Model",
+                    "Diperbarui %s  •  BMKG & KLHK (ISPU)  •  Open-Meteo Atmospheric Model",
                     w.updatedTime));
         }
     }
@@ -427,30 +426,25 @@ public class WeatherActivity extends Activity {
 
         Calendar now = Calendar.getInstance();
         int hour = now.get(Calendar.HOUR_OF_DAY);
-        boolean isNight = (hour < 7 || hour >= 19);
+        boolean isNight = (hour < 6 || hour >= 18);
 
         String cond = (w.condition != null) ? w.condition.toLowerCase(Locale.ROOT) : "";
         String icon = (w.icon != null) ? w.icon : "";
 
-        // Thunderstorm codes: 95, 96, 99
         if (cond.contains("thunder") || cond.contains("storm") || cond.contains("ribut") || icon.contains("⛈")) {
             return WeatherBackgroundView.ConditionType.THUNDERSTORM;
         }
 
-        // Real Rain: Heavy rain or showers (codes 61, 63, 65, 80, 81, 82)
         if (cond.contains("heavy") || cond.contains("lebat") || 
-            (cond.contains("hujan") && !cond.contains("renyai")) || 
+            (cond.contains("hujan") && !cond.contains("gerimis")) || 
             (cond.contains("rain") && !cond.contains("drizzle") && !cond.contains("light"))) {
             return WeatherBackgroundView.ConditionType.RAIN;
         }
 
-        // Night
         if (isNight) {
             return WeatherBackgroundView.ConditionType.NIGHT;
         }
 
-        // Daytime: In Malaysia, if condition is trace drizzle or sunny or partly cloudy or clear
-        // default to Sunny with radiant sky and sun lens flare!
         return WeatherBackgroundView.ConditionType.SUNNY;
     }
 
@@ -460,7 +454,7 @@ public class WeatherActivity extends Activity {
             String lower = timeText.trim().toLowerCase(Locale.ROOT);
             if ("now".equals(lower)) {
                 int h = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-                isNight = (h < 7 || h >= 19);
+                isNight = (h < 6 || h >= 18);
             } else {
                 try {
                     boolean isPm = lower.contains("pm");
@@ -476,7 +470,7 @@ public class WeatherActivity extends Activity {
                         } else {
                             hour24 = hourNum;
                         }
-                        isNight = (hour24 < 7 || hour24 >= 19);
+                        isNight = (hour24 < 6 || hour24 >= 18);
                     }
                 } catch (Exception ignored) {
                 }
