@@ -1,10 +1,11 @@
-name: Build Android APK
+name: Build Android TV APK
 
 on:
   push:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+  workflow_dispatch: # Memungkinkan tombol "Run workflow" ditekan manual di tab Actions
 
 jobs:
   build:
@@ -23,14 +24,18 @@ jobs:
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
+    - name: Make build script executable
+      run: chmod +x launcher/build.sh # Sesuaikan jika lokasi skrip build berbeda
 
-    - name: Build Debug APK
-      run: ./gradlew assembleDebug
+    - name: Run Build Script to Create APK
+      run: |
+        cd launcher
+        ./build.sh
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: glass-tv-home-id-debug
-        path: app/build/outputs/apk/debug/app-debug.apk
+        name: glass-tv-home-indo-apk
+        path: |
+          launcher/**/*.apk
+          **/*.apk
