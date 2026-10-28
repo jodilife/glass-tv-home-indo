@@ -18,10 +18,8 @@ import android.widget.TextView;
 import java.util.List;
 
 /**
- * Where is this TV? States on the left, the state's JAKIM zones on the right (each with its main town and
- * districts). OK on a zone keeps it: Waktu Solat, the weather line and the Weather app follow it. Back
- * leaves everything as it was. Opened from the Wallpaper menu, and once by itself on a first start when
- * the theme names no zone.
+ * Memilih lokasi TV: Provinsi di sebelah kiri, daftar wilayah/kota di sebelah kanan.
+ * Menekan OK pada wilayah akan menyimpan preferensi untuk Jadwal Sholat dan Cuaca.
  */
 public class LocationActivity extends Activity {
     private float density;
@@ -44,8 +42,8 @@ public class LocationActivity extends Activity {
         page.setOrientation(LinearLayout.VERTICAL);
         page.setPadding(dp(64), dp(40), dp(64), dp(28));
         page.setBackground(new GradientDrawable(GradientDrawable.Orientation.TL_BR, new int[]{0xFF1E2A3A, 0xFF0A0E14}));
-        page.addView(text("Location", 34, 0xFFFFFFFF, 500));
-        TextView sub = text("Where is this TV? Waktu Solat follows JAKIM's zone, and the weather follows its main town.",
+        page.addView(text("Lokasi", 34, 0xFFFFFFFF, 500));
+        TextView sub = text("Di mana lokasi TV ini? Jadwal Sholat dan cuaca akan menyesuaikan dengan wilayah yang dipilih.",
                 15, 0xA6FFFFFF, 400);
         sub.setPadding(0, dp(4), 0, dp(20));
         page.addView(sub);
@@ -68,7 +66,7 @@ public class LocationActivity extends Activity {
         columns.addView(zoneScroll, zlp);
         page.addView(columns, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f));
 
-        hint = text("OK: choose  ·  Back: leave it as it is", 13, 0x80FFFFFF, 400);
+        hint = text("OK: Pilih  ·  Back: Biarkan seperti semula", 13, 0x80FFFFFF, 400);
         hint.setPadding(0, dp(14), 0, 0);
         page.addView(hint);
         setContentView(page);
@@ -120,7 +118,7 @@ public class LocationActivity extends Activity {
             TextView town = text(z.town, 18, 0xFFFFFFFF, 500);
             top.addView(town, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
             boolean isNow = z.code.equals(current);
-            TextView code = text(isNow ? "Now  ·  " + z.code : z.code, 13, isNow ? 0xFF30D158 : 0x99FFFFFF, 600);
+            TextView code = text(isNow ? "Dipilih  ·  " + z.code : z.code, 13, isNow ? 0xFF30D158 : 0x99FFFFFF, 600);
             top.addView(code);
             row.addView(top);
             TextView districts = text(z.districts, 13, 0x99FFFFFF, 400);
